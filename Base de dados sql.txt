@@ -1,0 +1,55 @@
+-- Criar o banco de dados
+CREATE DATABASE GerenciamentoTarefas;
+GO
+
+-- Usar o banco de dados
+USE GerenciamentoTarefas;
+GO
+
+CREATE TABLE Departamento (
+    DepartamentoID INT IDENTITY(1,1) PRIMARY KEY,
+    Nome NVARCHAR(100) NOT NULL,
+    Descricao NVARCHAR(255)
+);
+GO
+
+CREATE TABLE Funcionario (
+    FuncionarioID INT IDENTITY(1,1) PRIMARY KEY,
+    Nome NVARCHAR(100) NOT NULL,
+    Cargo NVARCHAR(50),
+    DepartamentoID INT,
+    CONSTRAINT FK_Funcionario_Departamento FOREIGN KEY (DepartamentoID)
+    REFERENCES Departamento(DepartamentoID)
+);
+GO
+
+CREATE TABLE Usuario (
+    UsuarioID INT IDENTITY(1,1) PRIMARY KEY,
+    Nome NVARCHAR(100) NOT NULL,
+    Email NVARCHAR(100) UNIQUE NOT NULL,
+    SenhaHash NVARCHAR(255) NOT NULL,
+    FuncionarioID INT,
+    CONSTRAINT FK_Usuario_Funcionario FOREIGN KEY (FuncionarioID)
+    REFERENCES Funcionario(FuncionarioID)
+);
+GO
+
+CREATE TABLE AgendamentoTarefas (
+    TarefaID INT IDENTITY(1,1) PRIMARY KEY,
+    Descricao NVARCHAR(255) NOT NULL,
+    DataHora DATETIME NOT NULL,
+    FuncionarioID INT,
+    CONSTRAINT FK_AgendamentoTarefas_Funcionario FOREIGN KEY (FuncionarioID)
+    REFERENCES Funcionario(FuncionarioID)
+);
+GO
+
+CREATE TABLE ControleEntradaSaida (
+    RegistroID INT IDENTITY(1,1) PRIMARY KEY,
+    FuncionarioID INT,
+    DataHora DATETIME NOT NULL,
+    TipoRegistro NVARCHAR(50) NOT NULL, -- Pode ser "Entrada" ou "Saída"
+    CONSTRAINT FK_ControleEntradaSaida_Funcionario FOREIGN KEY (FuncionarioID)
+    REFERENCES Funcionario(FuncionarioID)
+);
+GO
